@@ -1,0 +1,36 @@
+<!-- Future DocString-->
+
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+
+
+{% if cart_items %}
+    <h1>Donation Cart Summary</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Urgency Level</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in cart_items %}
+            <tr>
+                <td>{{ entry.item.items }}</td>
+                <td>{{ entry.quantity }}</td>
+                <td>{{ entry.item.unit_price }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><strong>Total Items in Cart:</strong> {{ total_count }}</p>
+
+   <!-- commenting out this segment for now.  <a href="{ url 'confirm_donation' }" class="btn-confirm">Confirm Donation</a>
+{% else %}
+    <p>Your cart is empty.</p> <a href="{ url 'item_list' }">Go see what's needed.</a> -->
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,53 @@
+<!-- Future Doc String
+ -->
+
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+    <table>
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Description</th>
+                <th>Priority</th>
+                <th>Price</th>
+                <th>Vendor</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.description }}</td>
+                <td>{{ item.priority }}</td>
+                <td>{{ item.cheapest_price }}</td>
+                <td>{{ item.cheapest_vendor }}</td>
+                <td> 
+                    <form action="{% url 'add_to_cart' item.id %}" method="POST">
+                        {% csrf_token %}
+                        <div class = "quantity-controls">
+                            <label for="qty-{{ item.id }}">Quantity</label>
+                            <input 
+                                type="number" 
+                                name="Quantity" 
+                                value="1" 
+                                min="1"
+                                max="{{ item.max_quantity }}"
+                                required
+                            >
+                        </div>
+                    <td>   
+                        <div class="TheButton">
+                            <button type="submit">Add To Cart</button>
+                        </div>
+                    </td>    
+                    </form> 
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+   
+{% endblock %}

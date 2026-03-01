@@ -32,13 +32,17 @@ def view_cart(request):
     grabs the cart dictionary from the session created in add_to_cart().
     Then iterates through the session data using a for loop. In the loop 
     it grabs the category, item, quantity, unit price and line total.
-    Grand total is calculated at the end. 
+    Grand total is calculated at the end.
+
+    get('cart', {}) is saying i want the cart session (which is a dictionary) and if there is not a dictionary yet the default is an empty dictionary.
     """
     cart_session = request.session.get('cart', {})
 
     cart_items = []
     grand_total_items = 0 # this probably calculates the total number of items not the total expense.
 
+
+# remember that .items() grabs the key value pair of a a dictionary in this case the 'cart' dictionary cart_session
     for item_id, quantity in cart_session.items():
         try:
             # Attempts to grab the Item object from the database.

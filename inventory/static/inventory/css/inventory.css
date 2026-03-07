@@ -1,0 +1,27 @@
+body {
+      margin: 0;
+      background: linear-gradient(
+        135deg,
+        red,
+        orange,
+        yellow,
+        green,
+        cyan,
+        blue,
+        violet
+      );
+      background-size: 400% 400%;
+      animation: rainbowShift 10s ease infinite;
+      color: black;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    @keyframes rainbowShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }

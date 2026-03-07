@@ -11,21 +11,28 @@
         <thead>
             <tr>
                 <th>Item</th>
+                <th>Vendor</th>
+                <th>Price</th>
                 <th>Quantity</th>
-                <th>Urgency Level</th>
+                <th>Total</th>
             </tr>
         </thead>
         <tbody>
             {% for entry in cart_items %}
             <tr>
                 <td>{{ entry.item.items }}</td>
+                <td>{{ entry.vendor }}</td>
+                <td>{{ entry.price }}</td>
                 <td>{{ entry.quantity }}</td>
-                <td>{{ entry.item.unit_price }}</td>
+                <td>{{ entry.line_total }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    <p><strong>Total Items in Cart:</strong> {{ total_count }}</p>
+    <p><strong>Total</strong> {{ grand_total }}</p>
+    <div>
+        <a href="{% url 'item_list' %}" class="btn btn-primary">Back to Item List</a>
+    </div>
 
    <!-- commenting out this segment for now.  <a href="{ url 'confirm_donation' }" class="btn-confirm">Confirm Donation</a>
 {% else %}

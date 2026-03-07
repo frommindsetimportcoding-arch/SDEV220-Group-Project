@@ -4,6 +4,7 @@
 {% extends 'inventory/base.html' %}
 
 {% block content %}
+    <h1>Donation List</h1>
     <table>
         <thead>
             <tr>
@@ -31,7 +32,7 @@
                             <label for="qty-{{ item.id }}">Quantity</label>
                             <input 
                                 type="number" 
-                                name="Quantity" 
+                                name="quantity" 
                                 value="1" 
                                 min="1"
                                 max="{{ item.max_quantity }}"
@@ -39,9 +40,7 @@
                             >
                         </div>
                     <td>   
-                        <div class="TheButton">
-                            <button type="submit">Add To Cart</button>
-                        </div>
+                            <button class= "btn btn-primary" type="submit">Add To Cart</button>
                     </td>    
                     </form> 
                 </td>
@@ -49,5 +48,8 @@
             {% endfor %}
         </tbody>
     </table>
+    <div>
+        <a href="{% url 'view_cart' %}" class="btn btn-primary">Go to Cart</a>
+    </div>
    
 {% endblock %}

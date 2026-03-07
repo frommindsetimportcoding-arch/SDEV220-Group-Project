@@ -43,13 +43,7 @@ def view_cart(request):
     cart_items = []
     grand_total = 0 
 
-<<<<<<< HEAD
-
-# remember that .items() grabs the key value pair of a a dictionary in this case the 'cart' dictionary cart_session
-    for item_id, quantity in cart_session.items():
-=======
     for item_id, data in cart_session.items():
->>>>>>> feature/item-model
         try:
             # Attempts to grab the Item object from the database.
             item = Item.objects.get(id=item_id)

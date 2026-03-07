@@ -1,5 +1,7 @@
 from .models import Item
 from random import uniform
+import time
+from datetime import timedelta
 
 class InventoryLogic:
     """
@@ -18,14 +20,14 @@ class InventoryLogic:
         """
         return Item.objects.filter(priority_level__gt=1).order_by('-priority_level')
     
-    def get_items_with_prices(self):
+    def get_items_with_prices(self, session):
         simulator = PriceSimulator()
         items = self.get_prioritized_items()
 
         result = []
 
         for item in items:
-            vendor, price = simulator.get_lowest_price(item)
+            vendor, price = simulator.get_price_with_cache(session, item)
 
             result.append({'id': item.id,
                            'name': item.items,
@@ -39,12 +41,21 @@ class InventoryLogic:
 # New code testing to see if it works. 
     def add_item_to_session_cart(self, session, item_id, quantity):
         cart = session.get('cart', {})
+        item = Item.objects.get(id=item_id)
+
+        simulator = PriceSimulator()
+        vendor, price = simulator.get_price_with_cache(session, item)
+
         str_id = str(item_id)
 
         if str_id in cart:
-            cart[str_id] += int(quantity)
+            cart[str_id]['quantity'] += int(quantity)
         else:
-            cart[str_id] = int(quantity)
+            cart[str_id] = {
+                'quantity': int(quantity),
+                'vendor': vendor,
+                'price': price
+            }
 
         session['cart'] = cart
         session.modified = True  # This line of code tells Django that the dictionary was changed.
@@ -58,14 +69,13 @@ class PriceSimulator:
 
 
     VENDORS = ['Amazon', 'Walmart', 'Target']
-
+    PRICE_TTL = 10
 
     def generate_vendor_prices(self, item):
         prices = {}
-
+        
         for vendor in self.VENDORS:
             price = uniform(item.unit_price * 0.7, item.unit_price * 1.3)
-
             prices[vendor] = round(price, 2)
 
         return prices 
@@ -75,6 +85,31 @@ class PriceSimulator:
         prices = self.generate_vendor_prices(item)
         vendor = min(prices, key=prices.get)
         return vendor, prices[vendor]
+    
+    def get_price_with_cache(self, session, item):
+        price_cache = session.get("prices", {})
+        item_key = str(item.id)
+
+        current_time = time.time()
+
+        if item_key in price_cache:
+            cached = price_cache[item_key]
+
+            if current_time - cached["timestamp"] < self.PRICE_TTL:
+                return cached['vendor'], cached['price']
+            
+        vendor, price = self.get_lowest_price(item)
+
+        price_cache[item_key] = {
+            'vendor': vendor,
+            'price': price,
+            'timestamp': current_time
+        }
+
+        session['prices'] = price_cache
+        session.modified = True
+
+        return vendor, price 
 
 class DonationCart:
     pass

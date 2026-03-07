@@ -6,12 +6,14 @@ from .models import Item
 def item_list(request):
     #items = Item.objects.order_by('items')
     logic = InventoryLogic()
-    items = logic.get_items_with_prices()
+    items = logic.get_items_with_prices(request.session)
     return render(request, 'inventory/item_list.html', {'items': items})
 
 # new testing
 def add_to_cart(request, item_id):
+
     if request.method == "POST":
+        
         qty_str = request.POST.get('quantity', '1')
 
         # Exception handling to prevent string literal input
@@ -37,23 +39,29 @@ def view_cart(request):
     cart_session = request.session.get('cart', {})
 
     cart_items = []
-    grand_total_items = 0 # this probably calculates the total number of items not the total expense.
+    grand_total = 0 
 
-    for item_id, quantity in cart_session.items():
+    for item_id, data in cart_session.items():
         try:
             # Attempts to grab the Item object from the database.
             item = Item.objects.get(id=item_id)
+
+            line_total = data['price'] * data['quantity']
+            grand_total += line_total
             cart_items.append({
                 'item': item, 
-                'quantity': quantity,
+                'quantity': data['quantity'],
+                'vendor': data['vendor'],
+                'price': data['price'],
+                'line_total': round(line_total, 2)
             })
-            grand_total_items += int(quantity)
+
         except Item.DoesNotExist:
             # And if the item object is not in the database...
             continue
 
     context = {
         'cart_items': cart_items,
-        'total_count': grand_total_items
+        'grand_total': round(grand_total, 2)
     }
     return render(request, 'inventory/donation_cart.html', context)

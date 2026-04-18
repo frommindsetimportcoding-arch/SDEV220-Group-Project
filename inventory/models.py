@@ -12,13 +12,13 @@ class Item(models.Model):
     Docstring for Items
     """
     # URLs
-    amazon_product_url = models.URLField(null=False, blank=False)
+    amazon_product_url = models.URLField(null=True, blank=False)
     amazon_image_url = models.URLField(null=True, blank=True)
-    amazon_wishlist_url = models.URLField(null=False, blank=False)
+    amazon_wishlist_url = models.URLField(null=True, blank=False)
 
     # Info
     name = models.CharField(max_length=200, blank=True)
-    category = models.CharField(max_length=200, blank=True)
+    category = models.CharField(max_length=200, blank=False)
     #description = models.TextField(blank=True)
 
     # Inventory

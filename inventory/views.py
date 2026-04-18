@@ -1,16 +1,29 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .services import InventoryLogic
+from .services import DonationCart, InventoryLogic
 from .models import Item
+from django.http import HttpRequest
+from django.contrib import messages
+
 # Create your views here.
 
-def item_list(request):
+def item_list(request: HttpRequest):
     #items = Item.objects.order_by('items')
     logic = InventoryLogic()
-    items = logic.get_items_with_prices(request.session)
+    items = logic.get_items_with_name_price_image()
     return render(request, 'inventory/item_list.html', {'items': items})
 
-# new testing
-def add_to_cart(request, item_id):
+
+def remove_from_cart(request: HttpRequest, item_id):
+    cart = DonationCart()
+
+    message_output = cart.delete_item_from_session_cart(request.session, item_id)
+
+    messages.success(request, message_output)
+
+    return redirect('view_cart')
+
+
+def add_to_cart(request: HttpRequest, item_id):
 
     if request.method == "POST":
         
@@ -22,14 +35,14 @@ def add_to_cart(request, item_id):
         except ValueError:
             quantity = 1
         
-        logic = InventoryLogic()
-        logic.add_item_to_session_cart(request.session, item_id, quantity)
+        cart = DonationCart()
+        cart.add_item_to_session_cart(request.session, item_id, quantity)
 
     return redirect('item_list')
 
 
-# new testing
-def view_cart(request):
+
+def view_cart(request: HttpRequest):
     """
     grabs the cart dictionary from the session created in add_to_cart().
     Then iterates through the session data using a for loop. In the loop 
@@ -48,13 +61,14 @@ def view_cart(request):
             # Attempts to grab the Item object from the database.
             item = Item.objects.get(id=item_id)
 
-            line_total = data['price'] * data['quantity']
+            line_total = item.estimated_price * data['quantity']
             grand_total += line_total
             cart_items.append({
-                'item': item, 
+                'item': item,           # Passes the whole object to the template
+                'name': item.name,
+                'image': item.amazon_image_url, 
                 'quantity': data['quantity'],
-                'vendor': data['vendor'],
-                'price': data['price'],
+                'price': item.estimated_price,
                 'line_total': round(line_total, 2)
             })
 

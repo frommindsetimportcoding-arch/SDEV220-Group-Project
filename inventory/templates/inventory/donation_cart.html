@@ -11,7 +11,7 @@
         <thead>
             <tr>
                 <th>Item</th>
-                <th>Vendor</th>
+                <th></th>
                 <th>Price</th>
                 <th>Quantity</th>
                 <th>Total</th>
@@ -20,11 +20,21 @@
         <tbody>
             {% for entry in cart_items %}
             <tr>
-                <td>{{ entry.item.items }}</td>
-                <td>{{ entry.vendor }}</td>
+                <td>{{ entry.name }}</td>
+                <td>{% if entry.image %}
+                        <img src="{{ entry.image }}" alt="{{ entry.name }}" style="width:100px; height:auto;">
+                    {% else %}
+                        No Image
+                    {% endif %}
+                </td>
                 <td>{{ entry.price }}</td>
                 <td>{{ entry.quantity }}</td>
                 <td>{{ entry.line_total }}</td>
+                <td><form action="{% url 'remove_from_cart' entry.item.id %}" method="POST" stye="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Remove</button> 
+                </form>
+            </td>
             </tr>
             {% endfor %}
         </tbody>

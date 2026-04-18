@@ -10,10 +10,9 @@
             <tr>
                 <th>Item</th>
                 <th>Quantity</th>
-                <th>Description</th>
+                <th>Image</th>
                 <th>Priority</th>
                 <th>Price</th>
-                <th>Vendor</th>
             </tr>
         </thead>
         <tbody>
@@ -21,10 +20,14 @@
             <tr>
                 <td>{{ item.name }}</td>
                 <td>{{ item.quantity }}</td>
-                <td>{{ item.description }}</td>
+                <td>{% if item.image %}
+                        <img src="{{ item.image }}" alt="{{ item.name }}" style="width:100px; height:auto;">
+                    {% else %}
+                        No Image
+                    {% endif %}
+                </td>
                 <td>{{ item.priority }}</td>
-                <td>{{ item.cheapest_price }}</td>
-                <td>{{ item.cheapest_vendor }}</td>
+                <td>{{ item.price }}</td>
                 <td> 
                     <form action="{% url 'add_to_cart' item.id %}" method="POST">
                         {% csrf_token %}

@@ -1,4 +1,3 @@
-from .models import Item
 from random import uniform
 import time
 from datetime import timedelta
@@ -15,7 +14,8 @@ class InventoryLogic:
     """
 
     def get_all_items(self):
-        return Item.objects.all()
+        from .models import Item
+        return Item.objects.all() # Don't technically need this since we are getting items by filter. 
     
     
     def get_prioritized_items(self):
@@ -24,33 +24,37 @@ class InventoryLogic:
         Does so in descending order. Personal note: The '-' in '-priority_level' is what sorts in descending order.
         Filtering the object to remove anything from the donor list that would have a priority level 1 which is near full capacity. 
         """
+        from .models import Item
         return Item.objects.filter(priority_level__gt=1).order_by('-priority_level')
     
-    def get_items_with_prices(self, session): # get_items_with_price_and_image
-        simulator = PriceSimulator()
+    def get_items_with_name_price_image(self): 
+
         items = self.get_prioritized_items()
 
         result = []
 
         for item in items:
-            vendor, price = simulator.get_price_with_cache(session, item)
+            # name, price, image = amazon_api._parse_results(session, item)
+            # I don't think we need the above code until we start updating values and create api time logic calls.
+            # Perhaps the same situation with a session parameter. 
 
-            result.append({'id': item.id,
+            result.append({'id': item.pk,
                            'name': item.name,
                            'quantity': item.quantity,  # will get rid of this before production. 
-                           'description': item.description,
                            'priority': item.priority_level, # Will get rid of this before production. 
-                           'cheapest_vendor': vendor,
-                           'cheapest_price':price
+                           'price': item.estimated_price,
+                           'image': item.amazon_image_url
                            })
         return result 
-# New code testing to see if it works. 
+
+
+# Adding logic to DonationCart class.
+class DonationCart: 
     def add_item_to_session_cart(self, session, item_id, quantity):
+        from .models import Item
+        # Create the session cart object
         cart = session.get('cart', {})
         item = Item.objects.get(id=item_id)
-
-        simulator = PriceSimulator()
-        vendor, price = simulator.get_price_with_cache(session, item)
 
         str_id = str(item_id)
 
@@ -58,14 +62,33 @@ class InventoryLogic:
             cart[str_id]['quantity'] += int(quantity)
         else:
             cart[str_id] = {
+                'name': item.name,
+                'image': item.amazon_image_url,
                 'quantity': int(quantity),
-                'vendor': vendor,
-                'price': price
+                'price': item.estimated_price
             }
 
         session['cart'] = cart
         session.modified = True  # This line of code tells Django that the dictionary was changed.
 
+
+    def delete_item_from_session_cart(self, session, item_id):
+        cart = session.get('cart', {})
+        str_id = str(item_id)
+
+        # Pop the item directly from the cart dictionary
+        # Second argument is provided as a fall back so app doesn't crash if id is missing.
+        item_data = cart.pop(str_id, None)
+
+        if item_data:
+            user_message = f'Succesfully removed {item_data['name']} from cart.'
+        else:
+            user_message = 'Item was not in your cart.'
+        
+        session['cart'] = cart
+        session.modified = True
+        
+        return user_message
 
 class AmazonApi:
     """ serpApi will be used to parse product information into variables. """
@@ -74,9 +97,9 @@ class AmazonApi:
         self.client = serpapi.Client(api_key=self.SERPAPI_KEY)
     
     
-    def extract_asin(url):
+    def extract_asin(self, url):
         """ Extract ASIN from Amazon URL."""
-        match = re.search(r'/dp/[A-Z0-9]{10}', url)
+        match = re.search(r'/dp/([A-Z0-9]{10})', url)
         if match:
             return match.group(1)
         
@@ -164,6 +187,3 @@ class AmazonApi:
 #         session.modified = True
 
 #         return vendor, price 
-
-class DonationCart:
-    pass

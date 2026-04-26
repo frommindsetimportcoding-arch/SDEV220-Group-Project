@@ -17,11 +17,3 @@ header {background-color:#FFFFFF;
 hl {font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     color:#C8A2C8;
     }
-main {display:block;
-    color:#C8A2C8;
-    border-style: solid;
-    border-color: #C8A2C8;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    border-width: .1em;
-    padding-left: 1em;
-    padding-right: 1em;}

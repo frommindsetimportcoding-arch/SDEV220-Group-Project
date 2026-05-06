@@ -1,8 +1,6 @@
 body {background-color: #FFFFFF;
     display:block;
     color:#C8A2C8;
-    border-style: solid;
-    border-color: #C8A2C8;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     border-width: .1em;
     padding-left: 1em;
@@ -17,3 +15,26 @@ header {background-color:#FFFFFF;
 hl {font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     color:#C8A2C8;
     }
+table {
+    border-collapse: collapse;
+    margin: auto;
+    border: 1px solid #3399CC;
+    width: 90%;
+}
+td,
+th {
+    padding: 5px;
+    border: 1px solid #3399CC;
+}
+
+td {
+    text-align: center;
+}
+
+.text {
+    text-align: left;
+}
+
+tr:nth-of-type(even) {
+    background-color: #DFEDF8;
+}

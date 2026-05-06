@@ -33,7 +33,3 @@ td {
 .text {
     text-align: left;
 }
-
-tr:nth-of-type(even) {
-    background-color: #f3d3ff;
-}

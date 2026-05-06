@@ -60,6 +60,7 @@ class DonationCart:
 
         if str_id in cart:
             cart[str_id]['quantity'] += int(quantity)
+
         else:
             cart[str_id] = {
                 'name': item.name,
@@ -67,10 +68,11 @@ class DonationCart:
                 'quantity': int(quantity),
                 'price': item.estimated_price
             }
-
         session['cart'] = cart
         session.modified = True  # This line of code tells Django that the dictionary was changed.
 
+        user_message = f'Succesfully added {int(quantity)} {cart[str_id]['name']}'
+        return user_message
 
     def delete_item_from_session_cart(self, session, item_id):
         cart = session.get('cart', {})

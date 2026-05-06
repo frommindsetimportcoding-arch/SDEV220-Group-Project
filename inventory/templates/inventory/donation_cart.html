@@ -6,11 +6,12 @@
 
 
 {% if cart_items %}
+
     <h1>Donation Cart Summary</h1>
     <table>
         <thead>
             <tr>
-                <th>Item</th>
+                <th>Name</th>
                 <th></th>
                 <th>Price</th>
                 <th>Quantity</th>
@@ -44,9 +45,9 @@
         <a href="{% url 'item_list' %}" class="btn btn-primary">Back to Item List</a>
     </div>
 
-   <!-- commenting out this segment for now.  <a href="{ url 'confirm_donation' }" class="btn-confirm">Confirm Donation</a>
+   <!-- commenting out this segment for now.  <a href="{ url 'confirm_donation' }" class="btn-confirm">Confirm Donation</a> -->
 {% else %}
-    <p>Your cart is empty.</p> <a href="{ url 'item_list' }">Go see what's needed.</a> -->
+    <p style= "font-family:cursive; font-size:40px; text-align:center">Your Cart Is Empty &#x1F6D2; </p> <a href="{% url 'item_list' %}" style= "font-size:22px; text-decoration:none; color:rgb(38, 227, 218)">Go See What's Needed</a> 
 
 {% endif %}
 

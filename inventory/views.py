@@ -14,9 +14,13 @@ def item_list(request: HttpRequest):
 
 
 def remove_from_cart(request: HttpRequest, item_id):
+    """Function grabs the item_id from the Item object to check to make sure that the ID still exists. 
+       Then it relates the cart object to the session saved in cookies and removes the item determined by the primary key."""
+    item = get_object_or_404(Item, pk=item_id)
+
     cart = DonationCart()
 
-    message_output = cart.delete_item_from_session_cart(request.session, item_id)
+    message_output = cart.delete_item_from_session_cart(request.session, item.pk)
 
     messages.success(request, message_output)
 
@@ -24,6 +28,11 @@ def remove_from_cart(request: HttpRequest, item_id):
 
 
 def add_to_cart(request: HttpRequest, item_id):
+    """Function checks for item_id exisence first to avoid crash. Explicitly checks for "POST" to reduce attack surface.
+       Then checks for the value 'quantity' otherwise defaults to an integer 1. To be safe, we handle the exception by checking
+       for a ValueError and forcing the quantity to 1 to continue. add_item_to_session_cart creates a session dictionary if one
+       does not exist, otherwise it updates the dictionary."""
+    item = get_object_or_404(Item, pk=item_id)
 
     if request.method == "POST":
         
@@ -36,8 +45,11 @@ def add_to_cart(request: HttpRequest, item_id):
             quantity = 1
         
         cart = DonationCart()
-        cart.add_item_to_session_cart(request.session, item_id, quantity)
 
+        message_output = cart.add_item_to_session_cart(request.session, item.pk, quantity)
+
+        messages.success(request, message_output)
+        
     return redirect('item_list')
 
 

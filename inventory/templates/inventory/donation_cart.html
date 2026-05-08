@@ -1,17 +1,19 @@
 <!-- Future DocString-->
 
 {% extends 'inventory/base.html' %}
+{% load humanize %}
 
 {% block content %}
 
 
 {% if cart_items %}
+
     <h1>Donation Cart Summary</h1>
     <table>
         <thead>
             <tr>
-                <th>Item</th>
-                <th>Vendor</th>
+                <th>Name</th>
+                <th></th>
                 <th>Price</th>
                 <th>Quantity</th>
                 <th>Total</th>
@@ -20,23 +22,38 @@
         <tbody>
             {% for entry in cart_items %}
             <tr>
-                <td>{{ entry.item.items }}</td>
-                <td>{{ entry.vendor }}</td>
-                <td>{{ entry.price }}</td>
+                <td>{{ entry.name }}</td>
+                <td>{% if entry.image %}
+                        <img src="{{ entry.image }}" alt="{{ entry.name }}" style="width:100px; height:auto;">
+                    {% else %}
+                        No Image
+                    {% endif %}
+                </td>
+                <td>${{ entry.price|floatformat:2|intcomma }}</td>
                 <td>{{ entry.quantity }}</td>
-                <td>{{ entry.line_total }}</td>
+                <td>${{ entry.line_total|floatformat:2|intcomma }}</td>
+                <td><form action="{% url 'remove_from_cart' entry.item.id %}" method="POST" stye="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Remove</button> 
+                </form>
+            </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    <p><strong>Total</strong> {{ grand_total }}</p>
+    <p><strong>Total</strong> ${{ grand_total|floatformat:2|intcomma }}</p>
     <div>
         <a href="{% url 'item_list' %}" class="btn btn-primary">Back to Item List</a>
+        <a href="{{ first_item.amazon_wishlist_url }}" 
+            class="btn btn-primary"
+            style="background-color: orangered; color: #000000; border-color: orangered;" 
+            target="_blank" 
+            rel="noopener noreferrer">Finalize on Amazon</a>
     </div>
 
-   <!-- commenting out this segment for now.  <a href="{ url 'confirm_donation' }" class="btn-confirm">Confirm Donation</a>
+   <!-- commenting out this segment for now.  <a href="{ url 'confirm_donation' }" class="btn-confirm">Confirm Donation</a> -->
 {% else %}
-    <p>Your cart is empty.</p> <a href="{ url 'item_list' }">Go see what's needed.</a> -->
+    <p style= "font-family:cursive; font-size:40px; text-align:center">Your Cart Is Empty &#x1F6D2; </p> <a href="{% url 'item_list' %}" style= "font-size:22px; text-decoration:none; color:rgb(38, 227, 218)">Go See What's Needed</a> 
 
 {% endif %}
 

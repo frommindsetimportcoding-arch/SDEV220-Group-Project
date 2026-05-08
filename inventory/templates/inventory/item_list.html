@@ -2,6 +2,7 @@
  -->
 
 {% extends 'inventory/base.html' %}
+{% load humanize %}
 
 {% block content %}
     <h1>Donation List</h1>
@@ -19,7 +20,7 @@
             {% for item in items %}
             <tr>
                 <td>{{ item.name }}</td>
-                <td>{{ item.quantity }}</td>
+                <td>{{ item.quantity|intcomma }}</td>
                 <td>{% if item.image %}
                         <img src="{{ item.image }}" alt="{{ item.name }}" style="width:100px; height:auto;">
                     {% else %}
@@ -27,7 +28,7 @@
                     {% endif %}
                 </td>
                 <td>{{ item.priority }}</td>
-                <td>{{ item.price }}</td>
+                <td>${{ item.price|floatformat:2|intcomma }}</td>
                 <td> 
                     <form action="{% url 'add_to_cart' item.id %}" method="POST">
                         {% csrf_token %}
@@ -53,6 +54,11 @@
     </table>
     <div>
         <a href="{% url 'view_cart' %}" class="btn btn-primary">Go to Cart</a>
+        <a href="{{ first_item.amazon_wishlist_url }}" 
+            class="btn btn-primary"
+            style="background-color: orangered; color: #000000; border-color: orangered;" 
+            target="_blank" 
+            rel="noopener noreferrer">Proceed to Amazon</a>
     </div>
    
 {% endblock %}

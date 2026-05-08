@@ -1,6 +1,7 @@
 <!-- Future DocString-->
 
 {% extends 'inventory/base.html' %}
+{% load humanize %}
 
 {% block content %}
 
@@ -28,9 +29,9 @@
                         No Image
                     {% endif %}
                 </td>
-                <td>{{ entry.price }}</td>
+                <td>${{ entry.price|floatformat:2|intcomma }}</td>
                 <td>{{ entry.quantity }}</td>
-                <td>{{ entry.line_total }}</td>
+                <td>${{ entry.line_total|floatformat:2|intcomma }}</td>
                 <td><form action="{% url 'remove_from_cart' entry.item.id %}" method="POST" stye="display:inline;">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-danger btn-sm">Remove</button> 
@@ -40,9 +41,14 @@
             {% endfor %}
         </tbody>
     </table>
-    <p><strong>Total</strong> {{ grand_total }}</p>
+    <p><strong>Total</strong> ${{ grand_total|floatformat:2|intcomma }}</p>
     <div>
         <a href="{% url 'item_list' %}" class="btn btn-primary">Back to Item List</a>
+        <a href="{{ first_item.amazon_wishlist_url }}" 
+            class="btn btn-primary"
+            style="background-color: orangered; color: #000000; border-color: orangered;" 
+            target="_blank" 
+            rel="noopener noreferrer">Finalize on Amazon</a>
     </div>
 
    <!-- commenting out this segment for now.  <a href="{ url 'confirm_donation' }" class="btn-confirm">Confirm Donation</a> -->

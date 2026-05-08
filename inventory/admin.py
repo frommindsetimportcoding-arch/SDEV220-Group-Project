@@ -12,19 +12,25 @@ from .models import Item
 
 @admin.action(description='Fetch Amazon info for selected items')
 def fetch_amazon_data(self, request, queryset):
+    """ Queryset is built by selecting items in the admin panel via checkbox. We then iterate through each item object
+        and run the save() method again which will refresh the API values in the item object (name, price, image). """
     for item in queryset:
         item.save()
     self.message_user(request, f'Successfully triggered updates for {queryset.count()} items.')
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
+    """ Allows for custom logic in the admin. list_display allows us to see row values of fields on the main page of admin.
+        Actions lets us add functionality to the drop down, in this case we are adding the fetch_amazon_data() method. """
     list_display = ('name', 'display_image', 'priority_level', 'quantity', 'estimated_price')
     actions = [fetch_amazon_data]
 
-    # Renders the image in a safe html format that django is happy with.
+
     def display_image(self, obj):
+        """ Renders the image in a safe html format that Django is happy with."""
         if obj.amazon_image_url:
             return format_html('<img src="{}" width="50" height="50" style="object-fit: contain;" />', obj.amazon_image_url)
         return "No Image"
     
+    # This assigns a descriptive name to the display_image method that is more presentable in list_display.
     display_image.short_description = 'Product Image'
     

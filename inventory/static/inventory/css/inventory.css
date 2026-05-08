@@ -2,7 +2,6 @@ body {background-color: #FFFFFF;
     display:block;
     color:#C8A2C8;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    border-width: .1em;
     padding-left: 1em;
     padding-right: 1em;}
 
@@ -18,13 +17,13 @@ hl {font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 table {
     border-collapse: collapse;
     margin: auto;
-    border: 1px solid #3399CC;
+    border: 1px solid #C8A2C8;
     width: 90%;
 }
 td,
 th {
     padding: 5px;
-    border: 1px solid #3399CC;
+    border: 1px solid #C8A2C8;
 }
 
 td {
@@ -33,8 +32,4 @@ td {
 
 .text {
     text-align: left;
-}
-
-tr:nth-of-type(even) {
-    background-color: #DFEDF8;
 }

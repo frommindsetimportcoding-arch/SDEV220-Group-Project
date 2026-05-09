@@ -65,7 +65,7 @@ class Item(models.Model):
         ratio = self.quantity / self.max_quantity if self.max_quantity else 0
 
         self.priority_level = next((len(lvl_list) - lvl for lvl in range(len(lvl_list)) 
-                              if ratio <= self.lvl_percent(lvl_list[lvl])), 5)
+                              if ratio <= self.lvl_percent(lvl_list[lvl])), 1)
         return self.priority_level 
     
     def save(self, *args, **kwargs):

@@ -5,7 +5,12 @@
 {% load humanize %}
 
 {% block content %}
-    <h1>Donation List</h1>
+    <div class="item-list-header">
+        <h1>Donation List</h1>
+        <a href="{{ first_item.amazon_wishlist_url }}" class="btn wishlist-button" target="_blank" rel=""noopener noreferrer">
+            Amazon Wishlist
+        </a>
+    </div>
     <table>
         <thead>
             <tr>
@@ -54,11 +59,6 @@
     </table>
     <div>
         <a href="{% url 'view_cart' %}" class="btn btn-primary">Go to Cart</a>
-        <a href="{{ first_item.amazon_wishlist_url }}" 
-            class="btn btn-primary"
-            style="background-color: orangered; color: #000000; border-color: orangered;" 
-            target="_blank" 
-            rel="noopener noreferrer">Proceed to Amazon</a>
     </div>
    
 {% endblock %}

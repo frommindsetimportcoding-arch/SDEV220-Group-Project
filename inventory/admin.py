@@ -27,4 +27,3 @@ class ItemAdmin(admin.ModelAdmin):
         return "No Image"
     
     display_image.short_description = 'Product Image'
-    

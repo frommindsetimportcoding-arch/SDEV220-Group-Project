@@ -10,7 +10,10 @@ def item_list(request: HttpRequest):
     #items = Item.objects.order_by('items')
     logic = InventoryLogic()
     items = logic.get_items_with_name_price_image()
-    return render(request, 'inventory/item_list.html', {'items': items})
+    return render(request, 'inventory/item_list.html', {
+        'items': items,
+        'wishlist_url': logic.get_wishlist_url(),
+    })
 
 
 def remove_from_cart(request: HttpRequest, item_id):
@@ -52,6 +55,7 @@ def view_cart(request: HttpRequest):
     get('cart', {}) is saying i want the cart session (which is a dictionary) and if there is not a dictionary yet the default is an empty dictionary.
     """
     cart_session = request.session.get('cart', {})
+    logic = InventoryLogic()
 
     cart_items = []
     grand_total = 0 
@@ -78,6 +82,7 @@ def view_cart(request: HttpRequest):
 
     context = {
         'cart_items': cart_items,
-        'grand_total': round(grand_total, 2)
+        'grand_total': round(grand_total, 2),
+        'wishlist_url': logic.get_wishlist_url(),
     }
     return render(request, 'inventory/donation_cart.html', context)

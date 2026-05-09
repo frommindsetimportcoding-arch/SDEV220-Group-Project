@@ -12,7 +12,35 @@ header {background-color:#FFFFFF;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     color:#C8A2C8;
     padding-left: 1em;
-    padding-right: 1em;}
+    padding-right: 1em;
+    padding-top: 1em;
+    padding-bottom: 1em;}
+
+.header-content {display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:1em;
+    flex-wrap:wrap;}
+
+.item-list-header {display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:1em;
+    flex-wrap:wrap;
+    margin-bottom:.75em;}
+
+.item-list-header h1 {margin-bottom:0;}
+
+.wishlist-button {background-color:#C8A2C8;
+    border-color:#C8A2C8;
+    color:#FFFFFF;
+    padding:.6em 1em;
+    white-space:nowrap;}
+
+.wishlist-button:hover,
+.wishlist-button:focus {background-color:#A978A9;
+    border-color:#A978A9;
+    color:#FFFFFF;}
 
 hl {font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     color:#C8A2C8;

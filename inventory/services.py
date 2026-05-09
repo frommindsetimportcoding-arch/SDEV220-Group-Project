@@ -47,6 +47,16 @@ class InventoryLogic:
                            })
         return result 
 
+    def get_wishlist_url(self):
+        from .models import Item
+        return (
+            Item.objects
+            .exclude(amazon_wishlist_url__isnull=True)
+            .exclude(amazon_wishlist_url='')
+            .values_list('amazon_wishlist_url', flat=True)
+            .first()
+        )
+
 
 # Adding logic to DonationCart class.
 class DonationCart: 

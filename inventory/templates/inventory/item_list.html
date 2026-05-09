@@ -4,7 +4,14 @@
 {% extends 'inventory/base.html' %}
 
 {% block content %}
-    <h1>Donation List</h1>
+    <div class="item-list-header">
+        <h1>Donation List</h1>
+        {% if wishlist_url %}
+            <a href="{{ wishlist_url }}" class="btn wishlist-button" target="_blank" rel="noopener noreferrer">
+                Amazon Wishlist
+            </a>
+        {% endif %}
+    </div>
     <table>
         <thead>
             <tr>
